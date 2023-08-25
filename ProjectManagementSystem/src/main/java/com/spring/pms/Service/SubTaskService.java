@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.spring.pms.Entity.Subtask;
 import com.spring.pms.Entity.Task;
 import com.spring.pms.Entity.User;
+import com.spring.pms.Exceptions.BadRequestException;
 import com.spring.pms.Repository.SubtaskRepository;
 import com.spring.pms.Repository.TaskRepository;
 import com.spring.pms.Repository.UserRepo;
@@ -38,6 +39,10 @@ public class SubTaskService {
 	public void postSubtask( Subtask subtask,  long id)
 	{
 		Task task=taskRepository.findById(id);
+		if(task.getStatus().equals("Completed"))
+		{
+			throw new BadRequestException("Cannot_create_sub_task_beacuse_task was_completed");
+		}
 		task.getSubtask().add(subtask);
 		taskRepository.save(task);
 		int userid=task.getUser().getId();

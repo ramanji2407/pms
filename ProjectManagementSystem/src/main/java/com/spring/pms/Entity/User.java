@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,30 +30,35 @@ import lombok.NoArgsConstructor;
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Schema( example = "1")
 	private int id;
-	@Column(name="User_name")
-	@NotEmpty(message = "Task_name_shoulde_not_be_empty")
+	@Schema( example = "ram")
+	@Column(name="User_name",unique = true)
+	@NotEmpty(message = "Name_shoulde_not_be_empty")
 	private String name;
-	
+	@Schema( example = "ram")
+	@NotEmpty(message = "Pasword_shoulde_not_be_empty")
 	private String password;
+	@Schema(example = "pasupuletiramanji3@gmail.com")
 	@Email(message = "please_enter_valid_email_adress ")
 	@NotEmpty(message = "Email Shoulde not be empty")
 	private String email;
-	@Pattern(regexp = "^(ROLE_MANAGER|ROLE_USER)$")
+	@Schema(example = "ROLE_MANAGER")
+	@Pattern(regexp = "^(ROLE_MANAGER|ROLE_USER)$",message = "role_shoulde_be_either_user_admin")
 	private String role;
-	@Pattern(regexp = "^(Backend|Frontend)$")
+	
+	@Schema(example = "Backend")
+	@Pattern(regexp = "^(Backend|Frontend)$" ,message = "department_should_be_either_backend_frontend")
 	private String department; 
 	
 	@JsonIgnore
 	@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER )
 	Set<Project>projects;
-    @JsonIgnore
 
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
 	@JoinColumn(name = "User_id")
 	private List<Task>tasks;
-	@JsonIgnore
-
+    @JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JoinColumn(name = "assigned_user_id") 
  	private List<Subtask>subtasks;

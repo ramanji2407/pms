@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spring.pms.Entity.Project;
 import com.spring.pms.Exceptions.DetailsNotFoundException;
 import com.spring.pms.Exceptions.UserAlreadyExistException;
+import com.spring.pms.Response.Projectapiresponse;
 import com.spring.pms.Response.Response201;
 import com.spring.pms.Response.Response400;
 import com.spring.pms.Response.Response401;
@@ -40,17 +41,15 @@ public class ProjectController {
 	
 	@Autowired 
 	private ProjectService projectService;
+	
 	@ApiResponses({
-        @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Project.class), mediaType = "application/json") },description = "Ok"),
-        @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" )
-       ,@ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
-       @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
-       @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema(),mediaType = "application/json")},description = "No Content" )
-
-
-})  
+	    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Projectapiresponse.class), mediaType = "application/json") },description = "Ok"),
+	    @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" )
+	   ,@ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
+	   @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
+	   @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema(),mediaType = "application/json")},description = "No Content" )
+	}) 
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
-
 	@GetMapping("/")
 	public ResponseEntity< ApiRespons<List<Project>>> getAllProjects()
 	{
@@ -65,7 +64,7 @@ public class ProjectController {
 	}
 	@ApiResponses({
         @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation = Project.class), mediaType = "application/json") },description = "Ok"),
+            @Content(schema = @Schema(implementation = Projectapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" ),
        @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
@@ -86,7 +85,7 @@ public class ProjectController {
 		 return new ResponseEntity<>(response,HttpStatus.OK) ;
 	}
 	 @ApiResponses({
-	        @ApiResponse(responseCode = "201", content = {
+	        @ApiResponse( responseCode = "201", content = {
 	            @Content(schema = @Schema(implementation = Response201.class), mediaType = "application/json") },description = "Created"),
 	        @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
 	       , @ApiResponse(responseCode = "400", content = { @Content(examples = {
@@ -104,11 +103,7 @@ public class ProjectController {
 	@PostMapping("/")
 	public ResponseEntity<ApiRespons<String>>postProject( @Valid @RequestBody Project project)
 	{
-		Project project1=projectService.getAllProject(project.getId());
-		if(project1!=null)
-		{
-			throw new UserAlreadyExistException("Project_with_this_id: "+project.getId()+"alerady_exist");
-		}
+		
 		projectService.postProject(project);
         ApiRespons<String> response = new ApiRespons<>("Sucess", "Sucessfully_Created_Project");
 
@@ -116,7 +111,7 @@ public class ProjectController {
 	}
 	@ApiResponses({
         @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation =Project.class ), mediaType = "application/json") },description = "Ok"),
+            @Content(schema = @Schema(implementation =Projectapiresponse.class ), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(examples = {@ExampleObject(name="DatbaseConnection",value = "{\"message\":\"Check_UserName_And_Password_of_DataBase\"}")}, schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
        , @ApiResponse(responseCode = "400", content = { @Content(schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
 

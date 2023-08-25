@@ -9,20 +9,19 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.pms.Dto.Request;
 import com.spring.pms.Entity.Project;
 import com.spring.pms.Entity.User;
 import com.spring.pms.Exceptions.DetailsNotFoundException;
-import com.spring.pms.Exceptions.UserAlreadyExistException;
 import com.spring.pms.Response.Response201;
 import com.spring.pms.Response.Response400;
 import com.spring.pms.Response.Response401;
@@ -30,6 +29,8 @@ import com.spring.pms.Response.Response403;
 import com.spring.pms.Response.Response404;
 import com.spring.pms.Response.Response409;
 import com.spring.pms.Response.Response500;
+import com.spring.pms.Response.ResponseMessage;
+import com.spring.pms.Response.Userapiresponse;
 import com.spring.pms.Service.ApiRespons;
 import com.spring.pms.Service.Jwtservice;
 import com.spring.pms.Service.ProjectService;
@@ -54,7 +55,7 @@ private	UserService userService;
 	@Autowired 
 	private ProjectService projectService;
 	@ApiResponses({
-        @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = User.class), mediaType = "application/json") },description = "Ok"),
+        @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Userapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" )
        ,@ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
@@ -79,7 +80,7 @@ private	UserService userService;
 	}
 	@ApiResponses({
         @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation = User.class), mediaType = "application/json") },description = "Ok"),
+            @Content(schema = @Schema(implementation = Userapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" ),
        @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
@@ -119,13 +120,7 @@ private	UserService userService;
 	@PostMapping("/post/{id}")
 	public ResponseEntity<ApiRespons<String>> postUser(@Valid @RequestBody User user, @PathVariable int id)
 	{
-		User user1=userService.getAllUser(user.getId());
-
-		if(user1!=null)
-		{
-			throw new UserAlreadyExistException("User_with_this_id: "+user.getId()+"alerady_exist");
-
-		}
+		
 		
 		userService.postUser(user, id);
         ApiRespons<String> response = new ApiRespons<>("Sucess", "Sucessfully_Created_User");
@@ -135,7 +130,7 @@ private	UserService userService;
 	
 	@ApiResponses({
         @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation =Project.class ), mediaType = "application/json") },description = "Ok"),
+            @Content(schema = @Schema(implementation =Userapiresponse.class ), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(examples = {@ExampleObject(name="DatbaseConnection",value = "{\"message\":\"Check_UserName_And_Password_of_DataBase\"}")}, schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
        , @ApiResponse(responseCode = "400", content = { @Content(schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
 
@@ -161,20 +156,40 @@ private	UserService userService;
 		return new ResponseEntity<>( response,HttpStatus.OK);
 	}
 	 	
+	@ApiResponses({
+        @ApiResponse(responseCode = "200", content = {
+            @Content(schema = @Schema(implementation = ResponseMessage.class), mediaType = "application/json") },description = "Created"),
+       
+       @ApiResponse(responseCode = "403", content = { @Content( schema = @Schema(implementation = ResponseMessage.class),mediaType = "application/json")},description = "Forbidden" )
+
+
+})
 
 	@PostMapping("/token")
-	public String Genaratetoken(@RequestBody Request request )
-	{
-		Authentication authenticate = authmanager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-		if(authenticate.isAuthenticated())
-		{
-		return jwtservice.generateToken(request.getUsername());
-		}
-		else
-		{
-			throw new UsernameNotFoundException("user not found");
-		}
+	@ResponseBody
+	public ResponseEntity<ResponseMessage> generateToken(@RequestBody Request request) {
+	    try {
+	        Authentication authentication = authmanager.authenticate(
+	            new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+	        );
+
+	        if (authentication.isAuthenticated()) {
+	Jwtservice jwtService = new Jwtservice();
+
+	            String token = jwtService.generateToken(request.getUsername());
+	            ResponseMessage responseMessage = new ResponseMessage("success", "Token generated successfully", token);
+	            return ResponseEntity.ok(responseMessage);
+	        } else {
+	            ResponseMessage responseMessage = new ResponseMessage("error", "Authentication failed", null);
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseMessage);
+	        }
+	    } catch (Exception e) {
+	        ResponseMessage responseMessage = new ResponseMessage("error", "Authentication failed", null);
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseMessage);
+	    }
 	}
+
 	
+
 	
 }

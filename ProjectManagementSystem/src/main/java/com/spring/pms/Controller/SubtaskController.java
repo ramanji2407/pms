@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.pms.Entity.Subtask;
 import com.spring.pms.Exceptions.DetailsNotFoundException;
-import com.spring.pms.Exceptions.UserAlreadyExistException;
 import com.spring.pms.Response.Response200;
 import com.spring.pms.Response.Response201;
 import com.spring.pms.Response.Response400;
@@ -26,6 +25,7 @@ import com.spring.pms.Response.Response403;
 import com.spring.pms.Response.Response404;
 import com.spring.pms.Response.Response409;
 import com.spring.pms.Response.Response500;
+import com.spring.pms.Response.Subtaskapiresponse;
 import com.spring.pms.Service.ApiRespons;
 import com.spring.pms.Service.SubTaskService;
 
@@ -42,7 +42,7 @@ public class SubtaskController {
 	@Autowired
 	private SubTaskService subTaskService;
 	@ApiResponses({
-        @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Subtask.class), mediaType = "application/json") },description = "Ok"),
+        @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Subtaskapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" )
        ,@ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
@@ -67,7 +67,7 @@ public class SubtaskController {
 	}
 	@ApiResponses({
         @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation = Subtask.class), mediaType = "application/json") },description = "Ok"),
+            @Content(schema = @Schema(implementation = Subtaskapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" ),
        @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
@@ -110,10 +110,6 @@ public class SubtaskController {
 	public  ResponseEntity<ApiRespons<String>> postSubtask(@Valid @RequestBody Subtask subtask, @PathVariable long id)
 	{
 	
-		if(subTaskService.getAllSubtask(subtask.getId())!=null)
-		{
-			throw new UserAlreadyExistException("Task_with_this_id: "+subtask.getId()+"alerady_exist");
-		}
 		subTaskService.postSubtask(subtask, id);
 
         ApiRespons<String> response = new ApiRespons<>("Sucess", "Sucessfully_Created_SubTask");
@@ -121,7 +117,7 @@ public class SubtaskController {
 	}
 	@ApiResponses({
         @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation =Subtask.class ), mediaType = "application/json") },description = "Ok"),
+            @Content(schema = @Schema(implementation =Subtaskapiresponse.class ), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(examples = {@ExampleObject(name="DatbaseConnection",value = "{\"message\":\"Check_UserName_And_Password_of_DataBase\"}")}, schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
        , @ApiResponse(responseCode = "400", content = { @Content(schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
 
@@ -167,6 +163,7 @@ public class SubtaskController {
 			 throw new DetailsNotFoundException("SubTasks_wre_not_found_with_that_id_to_Delete");
 	
 		}
+		subTaskService.deleteSubtask(id);
 		 ApiRespons<String> response = new ApiRespons<>("Sucess","Deleted_Sucessfully");
 
 			return new ResponseEntity<>(response,HttpStatus.OK);

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.pms.Entity.Task;
 import com.spring.pms.Exceptions.DetailsNotFoundException;
-import com.spring.pms.Exceptions.UserAlreadyExistException;
 import com.spring.pms.Response.Response200;
 import com.spring.pms.Response.Response201;
 import com.spring.pms.Response.Response400;
@@ -26,6 +25,7 @@ import com.spring.pms.Response.Response403;
 import com.spring.pms.Response.Response404;
 import com.spring.pms.Response.Response409;
 import com.spring.pms.Response.Response500;
+import com.spring.pms.Response.Taskapiresponse;
 import com.spring.pms.Service.ApiRespons;
 import com.spring.pms.Service.TaskService;
 
@@ -42,7 +42,7 @@ public class TaskController {
 	@Autowired
 	private TaskService taskService;
 	@ApiResponses({
-        @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Task.class), mediaType = "application/json") },description = "Ok"),
+        @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Taskapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" )
        ,@ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
@@ -66,7 +66,7 @@ public class TaskController {
 	}
 	@ApiResponses({
         @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation = Task.class), mediaType = "application/json") },description = "Ok"),
+            @Content(schema = @Schema(implementation = Taskapiresponse.class), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class),mediaType = "application/json")},description = "Internal Server Error" ),
        @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
@@ -109,11 +109,7 @@ public class TaskController {
 	@PostMapping("/{id}/{pid}")
 	public ResponseEntity<ApiRespons<String>> postTask(@Valid @RequestBody Task task, @PathVariable int id,@PathVariable int pid)
 	{
-		Task task1=taskService.getAllTask(task.getId());
-		if(task1!=null)
-		{
-			throw new UserAlreadyExistException("Task_with_this_id: "+task.getId()+"alerady_exist");
-		}
+		
 		taskService.postTask(task, id,pid);
         ApiRespons<String> response = new ApiRespons<>("Sucess", "Sucessfully_Created_Task");
 		return new ResponseEntity<>(response,HttpStatus.CREATED);
@@ -122,7 +118,7 @@ public class TaskController {
 	}
 	@ApiResponses({
         @ApiResponse(responseCode = "200", content = {
-            @Content(schema = @Schema(implementation =Task.class ), mediaType = "application/json") },description = "Ok"),
+            @Content(schema = @Schema(implementation =Taskapiresponse.class ), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(examples = {@ExampleObject(name="DatbaseConnection",value = "{\"message\":\"Check_UserName_And_Password_of_DataBase\"}")}, schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
        , @ApiResponse(responseCode = "400", content = { @Content(schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
 
@@ -144,7 +140,7 @@ public class TaskController {
 		}
         ApiRespons<Task> response = new ApiRespons<>("Sucess",taskService.updateTask(task, id));
 
-		return new ResponseEntity<>(response,HttpStatus.CREATED);
+		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
 	 @ApiResponses({
 	        @ApiResponse(responseCode = "200", content = {

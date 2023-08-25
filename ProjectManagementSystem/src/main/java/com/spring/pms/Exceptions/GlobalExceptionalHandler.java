@@ -44,6 +44,15 @@ public class GlobalExceptionalHandler {
 			});
 		return new  ResponseEntity<Map<String,String>>(response,HttpStatus.BAD_REQUEST);
 	}
+	@ExceptionHandler(BadRequestException.class)
+	 public ResponseEntity<?> handleBadrequeste(BadRequestException alreadyExist)
+	 {
+		BadRequest notfound=new BadRequest();
+		notfound.setMessage(alreadyExist.getMessage());
+		notfound.setTimestamp(new Date());
+		notfound.setStatus(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(notfound,HttpStatus.BAD_REQUEST);
+	 }
 
 
 }
