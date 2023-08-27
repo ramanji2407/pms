@@ -6,7 +6,7 @@ public class Response404 {
 	//@Schema( example = "404")
 
 	private int statuscode;
-	@Schema( example ="Id_Was_Not_There_In_Database")
+	@Schema( example ="Id_Was_Not_Found")
 
 	private String message;
 //	public int getStatuscode() {

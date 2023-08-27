@@ -42,6 +42,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 
 @RestController
 @RequestMapping("/User")
@@ -107,9 +108,15 @@ private	UserService userService;
             @Content(schema = @Schema(implementation = Response201.class), mediaType = "application/json") },description = "Created"),
         @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
        , @ApiResponse(responseCode = "400", content = { @Content(examples = {
-               @ExampleObject(name = "Role",value = "{\"message\":\"Role_should_be_either_USER_or_Admin\"}"),
-               @ExampleObject(name = "Department", value = "{\"message\":\"Department_should_be_either_Backend_or_Frontend\"}"),
-            },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
+               @ExampleObject(name = "Idempty",value = "{\"message\":\"Project_id_should_not_be_empty\"}"),
+               @ExampleObject(name = "Idtype",value = "{\"message\":\"Project_id_should_be_integer_type\"}"),
+               @ExampleObject(name = "Nameempty",value = "{\"message\":\"Name_should_not_be_empty\"}"),
+               @ExampleObject(name = "Paswordempty",value = "{\"message\":\"Pasword_shoulde_not_be_empty\"}"),
+               @ExampleObject(name = "EmailPattern",value = "{\"message\":\"Pattern_shoulde_be_An_email_address_consists_of_a_username,_an_@_sign,_and_a_domain_name\"}"),
+               @ExampleObject(name = "Roletype",value = "{\"message\":\"Role_shoulde_be_either_user_admin\"}"),
+               @ExampleObject(name = "Departmenttype",value = "{\"message\":\"Department_should_be_either_backend_frontend\"}"),
+             },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
+
        @ApiResponse(responseCode = "409", content = { @Content(schema = @Schema(implementation = Response409.class),mediaType = "application/json")},description = "Conflicts" ),
        @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content( schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
@@ -132,8 +139,16 @@ private	UserService userService;
         @ApiResponse(responseCode = "200", content = {
             @Content(schema = @Schema(implementation =Userapiresponse.class ), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(examples = {@ExampleObject(name="DatbaseConnection",value = "{\"message\":\"Check_UserName_And_Password_of_DataBase\"}")}, schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
-       , @ApiResponse(responseCode = "400", content = { @Content(schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
-
+        ,@ApiResponse(responseCode = "400", content = { @Content(examples = {
+               @ExampleObject(name = "Idempty",value = "{\"message\":\"Id_should_not_be_empty\"}"),
+               @ExampleObject(name = "Idtype",value = "{\"message\":\"Id_should_be_integer_type\"}"),
+               @ExampleObject(name = "Nameempty",value = "{\"message\":\"Name_should_not_be_empty\"}"),
+               @ExampleObject(name = "Paswordempty",value = "{\"message\":\"Pasword_shoulde_not_be_empty\"}"),
+               @ExampleObject(name = "EmailPattern",value = "{\"message\":\"Pattern_shoulde_be_An_email_address_consists_of_a_username,_an_@_sign,_and_a_domain_name\"}"),
+               @ExampleObject(name = "Roletype",value = "{\"message\":\"Role_shoulde_be_either_user_admin\"}"),
+               @ExampleObject(name = "Departmenttype",value = "{\"message\":\"Department_should_be_either_backend_frontend\"}"),
+             },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
+        @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
        @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
        

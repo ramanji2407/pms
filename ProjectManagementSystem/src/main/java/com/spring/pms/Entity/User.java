@@ -32,6 +32,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Schema( example = "1")
 	private int id;
+	
 	@Schema( example = "ram")
 	@Column(name="User_name",unique = true)
 	@NotEmpty(message = "Name_shoulde_not_be_empty")
@@ -44,11 +45,11 @@ public class User {
 	@NotEmpty(message = "Email Shoulde not be empty")
 	private String email;
 	@Schema(example = "ROLE_MANAGER")
-	@Pattern(regexp = "^(ROLE_MANAGER|ROLE_USER)$",message = "role_shoulde_be_either_user_admin")
+	@Pattern(regexp = "^(ROLE_MANAGER|ROLE_USER)$",message = "Role_shoulde_be_either_user_admin")
 	private String role;
 	
 	@Schema(example = "Backend")
-	@Pattern(regexp = "^(Backend|Frontend)$" ,message = "department_should_be_either_backend_frontend")
+	@Pattern(regexp = "^(Backend|Frontend)$" ,message = "Department_should_be_either_backend_frontend")
 	private String department; 
 	
 	@JsonIgnore

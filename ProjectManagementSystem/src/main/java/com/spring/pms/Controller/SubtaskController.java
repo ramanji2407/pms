@@ -94,10 +94,22 @@ public class SubtaskController {
 	        @ApiResponse(responseCode = "201", content = {
 	            @Content(schema = @Schema(implementation = Response201.class), mediaType = "application/json") },description = "Created"),
 	        @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
-	       , @ApiResponse(responseCode = "400", content = { @Content(examples = {
-	               
-	               @ExampleObject(name = "Subtaskstatus", value = "{\"message\":\"Status_should_be_either_Completed_Progress\"}")},schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
-	       @ApiResponse(responseCode = "409", content = { @Content(schema = @Schema(implementation = Response409.class),mediaType = "application/json")},description = "Conflicts" ),
+	       ,
+	       @ApiResponse(responseCode = "400", content = { @Content(examples = {
+	              
+	               @ExampleObject(name = "Taskidempty",value = "{\"message\":\"Task_id_should_not_be_empty\"}"),
+	               @ExampleObject(name = "Taskidtype",value = "{\"message\":\"Task_id_should_be_integer_type\"}"),
+	               @ExampleObject(name = "Subtasknameempty",value = "{\"message\":\"Subtask_name_should_not_be_empty\"}"),
+	               @ExampleObject(name = "Subtaskdescriptionempty",value = "{\"message\":\"Description_shoulde_not_be_empty\"}"),
+	               @ExampleObject(name = "Subtaskduedatepattern",value = "{\"message\":\"Pattern_shoulde_be_MM/dd/yyyy\"}"),
+	               @ExampleObject(name = "Subtaskstatuserror", value = "{\"message\":\"Should_be_only_Completed_or_InProgress\"}"),
+	               @ExampleObject(name = "Subtaskcreateerror", value = "{\"message\":\"Inorder_to_create_Subtask_task_shoulde_be_in_inprogress\"}"),
+
+	             },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
+	       @ApiResponse(responseCode = "404", content = { @Content(examples = {
+	               @ExampleObject(name = "TaskidNotfound",value = "{\"message\":\"Task_id_Not_found\"}"),
+	              
+	             },schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Not_Found" ),
 	       @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
 	       @ApiResponse(responseCode = "403", content = { @Content( schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
 
@@ -119,9 +131,20 @@ public class SubtaskController {
         @ApiResponse(responseCode = "200", content = {
             @Content(schema = @Schema(implementation =Subtaskapiresponse.class ), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(examples = {@ExampleObject(name="DatbaseConnection",value = "{\"message\":\"Check_UserName_And_Password_of_DataBase\"}")}, schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
-       , @ApiResponse(responseCode = "400", content = { @Content(schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
+      ,  @ApiResponse(responseCode = "400", content = { @Content(examples = {
+	              
+	               @ExampleObject(name = "Subtaskidempty",value = "{\"message\":\"Subtask_id_should_not_be_empty\"}"),
+	               @ExampleObject(name = "Subtaskidtype",value = "{\"message\":\"Subtask_id_should_be_integer_type\"}"),
+	               @ExampleObject(name = "Subtasknameempty",value = "{\"message\":\"Subtask_name_should_not_be_empty\"}"),
+	               @ExampleObject(name = "Subtaskdescriptionempty",value = "{\"message\":\"Description_shoulde_not_be_empty\"}"),
+	               @ExampleObject(name = "Subtaskduedatepattern",value = "{\"message\":\"Pattern_shoulde_be_MM/dd/yyyy\"}"),
+	               @ExampleObject(name = "Subtaskstatuserror", value = "{\"message\":\"Should_be_only_Completed_or_InProgress\"}"),
 
-       @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
+	             },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
+      @ApiResponse(responseCode = "404", content = { @Content(examples = {
+              @ExampleObject(name = "SubtaskidNotfound",value = "{\"message\":\"Subtask_id_Not_found\"}"),
+             
+            },schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Not_Found" ),@ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
        
 

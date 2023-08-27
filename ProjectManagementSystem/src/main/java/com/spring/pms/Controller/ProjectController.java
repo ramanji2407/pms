@@ -89,10 +89,14 @@ public class ProjectController {
 	            @Content(schema = @Schema(implementation = Response201.class), mediaType = "application/json") },description = "Created"),
 	        @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
 	       , @ApiResponse(responseCode = "400", content = { @Content(examples = {
-	               @ExampleObject(name = "InvalidDataType",value = "{\"message\":\"Id_Should_Be_In_Integer_Type\"}"),
-	               @ExampleObject(name = "ProjectStatus", value = "{\"message\":\"Should_be_only_Active_or_Inactive\"}"),
+	               @ExampleObject(name = "ProjectNameempty",value = "{\"message\":\"Project_name_should_not_be_empty\"}"),
+	               @ExampleObject(name = "Projectdescriptionempty",value = "{\"message\":\"Description_shoulde_not_be_empty\"}"),
+	               @ExampleObject(name = "StartDatePattern",value = "{\"message\":\"Pattern_shoulde_be_MM/dd/yyyy\"}"),
+	               @ExampleObject(name = "EndDatePattern",value = "{\"message\":\"Pattern_shoulde_be_MM/dd/yyyy\"}"),
+	               @ExampleObject(name = "EndDateempty",value = "{\"message\":\"Pattern_shoulde_not_be_empty\"}"),
+	               @ExampleObject(name = "StartDateempty",value = "{\"message\":\"Pattern_shoulde_not_be_empty\"}"),
+	               @ExampleObject(name = "ProjectStatusinputerror", value = "{\"message\":\"Should_be_only_Active_or_Inactive\"}"),
 	             },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
-	       @ApiResponse(responseCode = "409", content = { @Content(schema = @Schema(implementation = Response409.class),mediaType = "application/json")},description = "Conflicts" ),
 	       @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
 	       @ApiResponse(responseCode = "403", content = { @Content( schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
 
@@ -113,9 +117,19 @@ public class ProjectController {
         @ApiResponse(responseCode = "200", content = {
             @Content(schema = @Schema(implementation =Projectapiresponse.class ), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(examples = {@ExampleObject(name="DatbaseConnection",value = "{\"message\":\"Check_UserName_And_Password_of_DataBase\"}")}, schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
-       , @ApiResponse(responseCode = "400", content = { @Content(schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
-
-       @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
+       ,@ApiResponse(responseCode = "400", content = { @Content(examples = {
+               @ExampleObject(name = "Idempty",value = "{\"message\":\"Id_should_not_be_empty\"}"),
+               @ExampleObject(name = "Idtype",value = "{\"message\":\"Id_should_be_integer_type\"}"),
+               @ExampleObject(name = "Projectnameempty",value = "{\"message\":\"Project_name_should_not_be_empty\"}"),
+               @ExampleObject(name = "Projectdescriptionempty",value = "{\"message\":\"Description_shoulde_not_be_empty\"}"),
+               @ExampleObject(name = "StartDatePattern",value = "{\"message\":\"Pattern_shoulde_be_MM/dd/yyyy\"}"),
+               @ExampleObject(name = "EndDatePattern",value = "{\"message\":\"Pattern_shoulde_be_MM/dd/yyyy\"}"),
+               @ExampleObject(name = "EndDateempty",value = "{\"message\":\"Pattern_shoulde_not_be_empty\"}"),
+               @ExampleObject(name = "StartDateempty",value = "{\"message\":\"Pattern_shoulde_not_be_empty\"}"),
+               @ExampleObject(name = "ProjectStatuserror", value = "{\"message\":\"Should_be_only_Active_or_Inactive\"}"),
+             },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
+       @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Notfound" ),
+ @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
        
 

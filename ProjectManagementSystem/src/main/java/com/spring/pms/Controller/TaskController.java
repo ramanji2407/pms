@@ -47,8 +47,6 @@ public class TaskController {
        ,@ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" ),
        @ApiResponse(responseCode = "204", content = { @Content(schema = @Schema(),mediaType = "application/json")},description = "No Content" )
-
-
 })  
 	@PreAuthorize("hasRole('ROLE_MANAGER')")
 
@@ -94,9 +92,22 @@ public class TaskController {
 	            @Content(schema = @Schema(implementation = Response201.class), mediaType = "application/json") },description = "Created"),
 	        @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
 	       , @ApiResponse(responseCode = "400", content = { @Content(examples = {
-	             
-	               @ExampleObject(name = "TaskStatus", value = "{\"message\":\"Status_should_be_either_Completed_Progress\"}")},schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
-	       @ApiResponse(responseCode = "409", content = { @Content(schema = @Schema(implementation = Response409.class),mediaType = "application/json")},description = "Conflicts" ),
+	               @ExampleObject(name = "Useridempty",value = "{\"message\":\"User_id_should_not_be_empty\"}"),
+	               @ExampleObject(name = "Useridtype",value = "{\"message\":\"User_id_should_be_integer_type\"}"),
+	               @ExampleObject(name = "Projectidempty",value = "{\"message\":\"Project_id_should_not_be_empty\"}"),
+	               @ExampleObject(name = "Projectidtype",value = "{\"message\":\"Project_id_should_be_integer_type\"}"),
+	               @ExampleObject(name = "Tasknameempty",value = "{\"message\":\"Task_name_should_not_be_empty\"}"),
+	               @ExampleObject(name = "Taskdescriptionempty",value = "{\"message\":\"Description_shoulde_not_be_empty\"}"),
+	               @ExampleObject(name = "Taskduedatepattern",value = "{\"message\":\"Pattern_shoulde_be_MM/dd/yyyy\"}"),
+	               @ExampleObject(name = "Taskstatuserror", value = "{\"message\":\"Should_be_only_Completed_or_InProgress\"}"),
+	               @ExampleObject(name = "Taskcreateerror", value = "{\"message\":\"Inorder_to_create_task_project_shoulde_be_in_active\"}"),
+
+	             },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
+	       @ApiResponse(responseCode = "404", content = { @Content(examples = {
+	               @ExampleObject(name = "UseridNotfound",value = "{\"message\":\"User_id_Not_found\"}"),
+	               @ExampleObject(name = "Projectidnotfound",value = "{\"message\":\"Project_id_Not_found\"}"),
+	              
+	             },schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Not_Found" ),
 	       @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
 	       @ApiResponse(responseCode = "403", content = { @Content( schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
 
@@ -121,8 +132,19 @@ public class TaskController {
             @Content(schema = @Schema(implementation =Taskapiresponse.class ), mediaType = "application/json") },description = "Ok"),
         @ApiResponse(responseCode = "500", content = { @Content(examples = {@ExampleObject(name="DatbaseConnection",value = "{\"message\":\"Check_UserName_And_Password_of_DataBase\"}")}, schema = @Schema(implementation = Response500.class,example = "{ \"status\": 500, \"message\": \"Database error\" }"),mediaType = "application/json")},description = "Internal Server Error" )
        , @ApiResponse(responseCode = "400", content = { @Content(schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
+       @ApiResponse(responseCode = "400", content = { @Content(examples = {
+               @ExampleObject(name = "Taskidempty",value = "{\"message\":\"Task_id_should_not_be_empty\"}"),
+               @ExampleObject(name = "Tasknameempty",value = "{\"message\":\"Task_name_should_not_be_empty\"}"),
+               @ExampleObject(name = "Taskdescriptionempty",value = "{\"message\":\"Description_shoulde_not_be_empty\"}"),
+               @ExampleObject(name = "Taskduedatepattern",value = "{\"message\":\"Pattern_shoulde_be_MM/dd/yyyy\"}"),
+               @ExampleObject(name = "Taskstatuserror", value = "{\"message\":\"Should_be_only_Completed_or_InProgress\"}"),
+               @ExampleObject(name = "Taskstatuserror", value = "{\"message\":\"Task_status_should_be_inprogress_if_subtasks_inprogress\"}"),
 
-       @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
+             },schema = @Schema(implementation = Response400.class),mediaType = "application/json")},description = "Bad Request" ),
+       @ApiResponse(responseCode = "404", content = { @Content(examples = {
+               @ExampleObject(name = "TaskidNotfound",value = "{\"message\":\"Task_id_Not_found\"}"),
+              
+             },schema = @Schema(implementation = Response404.class),mediaType = "application/json")},description = "Not_Found" ), @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema(implementation = Response401.class),mediaType = "application/json")},description = "Unauthorized" ),
        @ApiResponse(responseCode = "403", content = { @Content(schema = @Schema(implementation = Response403.class),mediaType = "application/json")},description = "Forbidden" )
        
 
@@ -168,7 +190,6 @@ public class TaskController {
 		return new ResponseEntity<>(response,HttpStatus.OK);
 
 
-		
 	}
 	
 
